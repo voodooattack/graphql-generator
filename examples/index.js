@@ -1,7 +1,7 @@
 var graphql = require('graphql')
-var generator = require('../')
+var generate = require('../')
 
-var schema = generator(`
+var schema = generate(`
   type Person {
     name: String
     age: Int

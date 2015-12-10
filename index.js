@@ -7,7 +7,7 @@ var GraphQLLanguage = require('graphql/language')
 
 var generator = require('./lib/generator')
 
-module.exports = function (schema, implementation) {
+module.exports = function generate (schema, implementation) {
     var ast = GraphQLLanguage.parse(schema, {noLocation: true})
     var types = generator(ast, implementation)
     var object_types = types.objectTypes
