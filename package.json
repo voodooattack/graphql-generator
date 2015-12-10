@@ -1,25 +1,27 @@
 {
-  "name": "graphql-generator",
-  "version": "1.0.1",
-  "description": "GraphQL schema generator",
-  "keywords": [
-    "graphql",
-    "schema"
-  ],
-  "author": "CatTail <zhongchiyu@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/CatTail/graphql-generator"
-  },
-  "dependencies": {
-    "debug": "^2.2.0",
-    "graphql": "^0.4.13"
-  },
-  "devDependencies": {
-    "mocha": "^2.3.4"
-  },
-  "scripts": {
-    "test": "./node_modules/.bin/mocha"
-  },
-  "main": "index.js"
+    "name": "graphql-generator",
+    "version": "1.0.1",
+    "description": "GraphQL schema generator",
+    "keywords": [
+        "graphql",
+        "schema"
+    ],
+    "author": "CatTail <zhongchiyu@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/CatTail/graphql-generator"
+    },
+    "dependencies": {
+        "debug": "^2.2.0"
+    },
+    "devDependencies": {
+        "mocha": "^2.3.4"
+    },
+    "peerDependencies": {
+        "graphql": "^0.4.14"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha"
+    },
+    "main": "index.js"
 }
