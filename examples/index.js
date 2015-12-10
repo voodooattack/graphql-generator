@@ -1,13 +1,14 @@
-var Create = require('./')
+var graphql = require('graphql')
+var generator = require('../')
 
-var query = Create(`
+var schema = generator(`
   type Person {
     name: String
     age: Int
   }
 
   type Query {
-    person(): Person
+    person: Person
   }
 
   input PersonInput {
@@ -36,7 +37,7 @@ var query = Create(`
   }
 })
 
-var out = query(`
+var out = graphql.graphql(schema, `
   query A {
     person {
       name
@@ -48,5 +49,3 @@ var out = query(`
     age: 25
   }
 }).then(res => console.log(res))
-
-// console.log(out)

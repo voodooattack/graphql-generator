@@ -1,12 +1,12 @@
 {
-  "name": "graph.ql",
+  "name": "graphql-generator",
   "version": "1.0.0",
-  "description": "Faster and simpler technique for creating and querying GraphQL schemas",
-  "keywords": ["graphql", "schema", "simple", "create"],
-  "author": "Matthew Mueller <mattmuelle@gmail.com>",
+  "description": "GraphQL schema generator",
+  "keywords": ["graphql", "schema"],
+  "author": "CatTail <zhongchiyu@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/MatthewMueller/graph.ql.git"
+    "url": "git://github.com/CatTail/graphql-generator"
   },
   "dependencies": {
     "debug": "^2.2.0",
@@ -18,5 +18,5 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
-  "main": "lib/index.js"
+  "main": "index.js"
 }
