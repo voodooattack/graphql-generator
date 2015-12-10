@@ -1,8 +1,11 @@
 {
   "name": "graphql-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GraphQL schema generator",
-  "keywords": ["graphql", "schema"],
+  "keywords": [
+    "graphql",
+    "schema"
+  ],
   "author": "CatTail <zhongchiyu@gmail.com>",
   "repository": {
     "type": "git",
