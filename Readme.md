@@ -63,6 +63,11 @@ var out = graphql.graphql(schema, `
 }).then(res => console.log(res))
 ```
 
+## TODO
+
+* interface
+* description
+
 ## Credits
 
 * [graph.ql](https://github.com/matthewmueller/graph.ql)
