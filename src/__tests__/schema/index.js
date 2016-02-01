@@ -16,7 +16,7 @@ var types = define(`
             return {type: 'Foo'}
         },
         bars() {
-            return [ {type: 'Bar'}, {type: 'Bar'} ]
+            return [ {id: 0, type: 'Bar'}, {id: 1, type: 'Bar'} ]
         },
     },
 }, deps(fooType, barType))

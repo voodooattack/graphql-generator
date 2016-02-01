@@ -2,7 +2,6 @@ var generator = require('../..')
 var define = generator.define
 var deps = generator.deps
 var objectType = require('./object')
-var uuid = 0
 
 module.exports = define(`
     type Bar implements Object {
@@ -11,9 +10,6 @@ module.exports = define(`
     }
 `, {
     Bar: {
-        id() {
-            return uuid++
-        },
         barKey() {
             return 'bar value'
         },
