@@ -10,6 +10,7 @@ describe('index', function () {
                     fooKey
                 }
                 bars {
+                    id
                     barKey
                 }
             }
@@ -18,8 +19,8 @@ describe('index', function () {
             data: {
                 foo: { fooKey: 'foo value' },
                 bars: [
-                    { barKey: 'bar value' },
-                    { barKey: 'bar value' },
+                    { id: 0, barKey: 'bar value' },
+                    { id: 1, barKey: 'bar value' },
                 ],
             },
         }

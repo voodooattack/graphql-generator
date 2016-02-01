@@ -14,7 +14,6 @@ See [unittest](src/__tests__/index.js)
 
 ## TODO
 
-* interface
 * description
 
 

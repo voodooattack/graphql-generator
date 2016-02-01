@@ -13,10 +13,10 @@ var types = define(`
 `, {
     Query: {
         foo() {
-            return {}
+            return {type: 'Foo'}
         },
         bars() {
-            return [ {}, {} ]
+            return [ {type: 'Bar'}, {type: 'Bar'} ]
         },
     },
 }, deps(fooType, barType))

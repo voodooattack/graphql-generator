@@ -44,7 +44,8 @@ function Generate (document, implementations, definition) {
   var description = []
   var unions = []
 
-  var definition = definition || {}
+  implementations = implementations || {}
+  definition = definition || {}
   var objectTypes = definition.objectTypes || {}
   var interfaceTypes = definition.interfaceTypes || {}
   var inputTypes = definition.inputTypes || {}
@@ -293,10 +294,10 @@ function Generate (document, implementations, definition) {
     return new ObjectType({
       name: typeName,
       description: getDescription(),
-      // TODO: interfaces
       interfaces: node.interfaces
         ? () => node.interfaces.map(getInterface)
         : null,
+      isTypeOf: implementations[node.name.value] && implementations[node.name.value]['isTypeOf'],
       fields: function () {
         return getFieldDefinitions(node, false)
       }
