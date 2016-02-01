@@ -15,14 +15,14 @@ module.exports = Generate
  * Definitions
  */
 
-var InputObjectType = graphql.GraphQLInputObjectType;
-var InterfaceType = graphql.GraphQLInterfaceType;
-var ScalarType = graphql.GraphQLScalarType;
-var ObjectType = graphql.GraphQLObjectType;
-var UnionType = graphql.GraphQLUnionType;
-var NonNullType = graphql.GraphQLNonNull;
-var EnumType = graphql.GraphQLEnumType;
-var ListType = graphql.GraphQLList;
+var InputObjectType = graphql.GraphQLInputObjectType
+var InterfaceType = graphql.GraphQLInterfaceType
+var ScalarType = graphql.GraphQLScalarType
+var ObjectType = graphql.GraphQLObjectType
+var UnionType = graphql.GraphQLUnionType
+var NonNullType = graphql.GraphQLNonNull
+var EnumType = graphql.GraphQLEnumType
+var ListType = graphql.GraphQLList
 
 /**
  * Built-in Scalars
@@ -40,16 +40,17 @@ var builtInScalars = {
  * Generate
  */
 
-function Generate (document, implementations) {
+function Generate (document, implementations, definition) {
   var description = []
   var unions = []
 
-  var objectTypes = {};
-  var interfaceTypes = {};
-  var inputTypes = {};
-  var unionTypes = {};
-  var scalarTypes = {};
-  var enumTypes = {};
+  var definition = definition || {}
+  var objectTypes = definition.objectTypes || {}
+  var interfaceTypes = definition.interfaceTypes || {}
+  var inputTypes = definition.inputTypes || {}
+  var unionTypes = definition.unionTypes || {}
+  var scalarTypes = definition.scalarTypes || {}
+  var enumTypes = definition.enumTypes || {}
 
   /**
    * Start from the top of the document
@@ -61,32 +62,32 @@ function Generate (document, implementations) {
         description.push(node.value.substr(1))
         break
       case 'ObjectTypeDefinition':
-        objectTypes[node.name.value] = getObjectTypeDefinition(node);
-        break;
+        objectTypes[node.name.value] = getObjectTypeDefinition(node)
+        break
       case 'InterfaceTypeDefinition':
-        interfaceTypes[node.name.value] = getInterfaceTypeDefinition(node);
-        break;
+        interfaceTypes[node.name.value] = getInterfaceTypeDefinition(node)
+        break
       case 'UnionTypeDefinition':
-        unions.push(node);
-        break;
+        unions.push(node)
+        break
       case 'ScalarTypeDefinition':
-        scalarTypes[node.name.value] = getScalarTypeDefinition(node);
-        break;
+        scalarTypes[node.name.value] = getScalarTypeDefinition(node)
+        break
       case 'EnumTypeDefinition':
-        enumTypes[node.name.value] = getEnumTypeDefinition(node);
-        break;
+        enumTypes[node.name.value] = getEnumTypeDefinition(node)
+        break
       case 'InputObjectTypeDefinition':
         inputTypes[node.name.value] = getInputObjectTypeDefinition(node)
-        break;
+        break
       default:
-        throw new Error('Unexpected node type ' + node.kind);
+        throw new Error('Unexpected node type ' + node.kind)
     }
   })
 
   // Delay unions until all other types exist, otherwise circular deps will cause problems
   unions.forEach(function (node) {
-    unionTypes[node.name.value] = getUnionTypeDefinition(node);
-  });
+    unionTypes[node.name.value] = getUnionTypeDefinition(node)
+  })
 
   /**
    * Return the types
@@ -105,15 +106,15 @@ function Generate (document, implementations) {
    */
 
   function getDescription() {
-    if (description.length === 0) return null;
+    if (description.length === 0) return null
     var prefix = description.reduce(function (a, b) {
-      return Math.min(a, /^\s*/.exec(b)[0].length);
-    }, Infinity);
+      return Math.min(a, /^\s*/.exec(b)[0].length)
+    }, Infinity)
     var result = description.map(function (str) {
-      return str.substr(prefix);
-    }).join('\n');
-    description = [];
-    return result;
+      return str.substr(prefix)
+    }).join('\n')
+    description = []
+    return result
   }
 
   /**
@@ -129,20 +130,20 @@ function Generate (document, implementations) {
         unionTypes[node.name.value] ||
         scalarTypes[node.name.value] ||
         enumTypes[node.name.value]
-      );
+      )
       if (!t) {
-        throw new Error(node.name.value + ' is not implemented.');
+        throw new Error(node.name.value + ' is not implemented.')
       }
-      return t;
+      return t
     }
     if (node.kind === 'ListType') {
-      return new ListType(getOutputType(node.type));
+      return new ListType(getOutputType(node.type))
     }
     if (node.kind === 'NonNullType') {
-      return new NonNullType(getOutputType(node.type));
+      return new NonNullType(getOutputType(node.type))
     }
-    console.dir(node);
-    throw new Error(node.kind + ' is not supported');
+    console.dir(node)
+    throw new Error(node.kind + ' is not supported')
   }
 
   /**
@@ -158,21 +159,21 @@ function Generate (document, implementations) {
         scalarTypes[node.name.value] ||
         enumTypes[node.name.value] ||
         inputTypes[node.name.value]
-      );
+      )
 
       if (!t) {
-        throw new Error(node.name.value + ' is not implemented.');
+        throw new Error(node.name.value + ' is not implemented.')
       }
-      return t;
+      return t
     }
     if (node.kind === 'ListType') {
-      return new ListType(getOutputType(node.values));
+      return new ListType(getOutputType(node.values))
     }
     if (node.kind === 'NonNullType') {
-      return new NonNullType(getOutputType(node.type));
+      return new NonNullType(getOutputType(node.type))
     }
-    console.dir(node);
-    throw new Error(node.kind + ' is not supported');
+    console.dir(node)
+    throw new Error(node.kind + ' is not supported')
   }
 
   /**
@@ -184,20 +185,20 @@ function Generate (document, implementations) {
       case 'IntValue':
       case 'StringValue':
       case 'BooleanValue':
-        return node.value;
+        return node.value
       case 'EnumValue':
-        return node.name.value;
+        return node.name.value
       case 'ListValue':
-        return node.values.map(getRawValue);
+        return node.values.map(getRawValue)
       case 'ObjectValue':
-        var res = {};
+        var res = {}
         node.fields.forEach(function (field) {
-          res[field.name.value] = getRawValue(field.value);
-        });
-        return res;
+          res[field.name.value] = getRawValue(field.value)
+        })
+        return res
       default:
-        console.dir(node);
-        throw new Error(node.kind + ' is not supported');
+        console.dir(node)
+        throw new Error(node.kind + ' is not supported')
     }
   }
 
@@ -209,22 +210,22 @@ function Generate (document, implementations) {
     switch (node.kind) {
       case 'IntValue':
       case 'FloatValue':
-        return JSON.parse(node.value);
+        return JSON.parse(node.value)
       case 'StringValue':
       case 'BooleanValue':
       case 'EnumValue':
-        return node.value;
+        return node.value
       case 'ListValue':
-        return node.values.map(getRawValueFromOfficialSchema);
+        return node.values.map(getRawValueFromOfficialSchema)
       case 'ObjectValue':
-        var res = {};
+        var res = {}
         node.fields.forEach(function (field) {
-          res[field.name.value] = getRawValueFromOfficialSchema(field.value);
-        });
-        return res;
+          res[field.name.value] = getRawValueFromOfficialSchema(field.value)
+        })
+        return res
       default:
-        console.dir(node);
-        throw new Error(node.kind + ' is not supported');
+        console.dir(node)
+        throw new Error(node.kind + ' is not supported')
     }
   }
 
@@ -233,12 +234,12 @@ function Generate (document, implementations) {
    */
 
   function getInterface(node) {
-    assert(node.kind === 'NamedType');
-    var t = interfaceTypes[node.name.value];
+    assert(node.kind === 'NamedType')
+    var t = interfaceTypes[node.name.value]
     if (!t) {
-      throw new Error(node.name.value + ' is not defined.');
+      throw new Error(node.name.value + ' is not defined.')
     }
-    return t;
+    return t
   }
 
   /**
@@ -246,24 +247,24 @@ function Generate (document, implementations) {
    */
 
   function getFieldDefinitions(node, isInterface) {
-    var typeName = node.name.value;
-    var fields = {};
+    var typeName = node.name.value
+    var fields = {}
     node.fields.forEach(function (field) {
       switch(field.kind) {
         case 'Comment':
-          description.push(field.value.substr(1));
-          break;
+          description.push(field.value.substr(1))
+          break
         case 'FieldDefinition':
-          var args = undefined;
+          var args = undefined
           if (field.arguments && field.arguments.length) {
-            args = {};
+            args = {}
             field.arguments.forEach(function (arg) {
-              if (arg.kind === 'Comment') return;
+              if (arg.kind === 'Comment') return
               args[arg.name.value] = {
                 type: getInputType(arg.type),
                 defaultValue: arg.defaultValue ? getRawValue(arg.defaultValue) : undefined
-              };
-            });
+              }
+            })
           }
           fields[field.name.value] = {
             name: field.name.value,
@@ -274,13 +275,13 @@ function Generate (document, implementations) {
               ? implementations[typeName][field.name.value]
               : undefined
             // TODO: deprecationReason: string
-          };
-          break;
+          }
+          break
         default:
-          throw new Error('Unexpected node type ' + field.kind);
+          throw new Error('Unexpected node type ' + field.kind)
       }
-    });
-    return fields;
+    })
+    return fields
   }
 
   /**
@@ -288,7 +289,7 @@ function Generate (document, implementations) {
    */
 
   function getObjectTypeDefinition(node) {
-    var typeName = node.name.value;
+    var typeName = node.name.value
     return new ObjectType({
       name: typeName,
       description: getDescription(),
@@ -297,9 +298,9 @@ function Generate (document, implementations) {
         ? () => node.interfaces.map(getInterface)
         : null,
       fields: function () {
-        return getFieldDefinitions(node, false);
+        return getFieldDefinitions(node, false)
       }
-    });
+    })
   }
 
   /**
@@ -313,9 +314,9 @@ function Generate (document, implementations) {
       // resolveType?: (value: any, info?: GraphQLResolveInfo) => ?GraphQLObjectType
       resolveType: implementations[node.name.value] && implementations[node.name.value]['resolveType'],
       fields: function () {
-        return getFieldDefinitions(node, true);
+        return getFieldDefinitions(node, true)
       }
-    });
+    })
   }
 
   /**
@@ -328,7 +329,7 @@ function Generate (document, implementations) {
       description: getDescription(),
       types: node.types.map(getOutputType),
       resolveType: implementations[node.name.value] && implementations[node.name.value]['resolveType']
-    });
+    })
   }
 
   /**
@@ -336,7 +337,7 @@ function Generate (document, implementations) {
    */
 
   function getScalarTypeDefinition(node) {
-    var imp = implementations[node.name.value];
+    var imp = implementations[node.name.value]
     return new ScalarType({
       name: node.name.value,
       description: getDescription(),
@@ -347,7 +348,7 @@ function Generate (document, implementations) {
         : imp && (imp.parseValue || imp.parse)
         ? (ast) => (imp.parseValue || imp.parse)(getRawValueFromOfficialSchema(ast))
         : undefined,
-    });
+    })
   }
 
   /**
@@ -355,29 +356,29 @@ function Generate (document, implementations) {
    */
 
   function getEnumTypeDefinition(node){
-    var d = getDescription();
-    var values = {};
+    var d = getDescription()
+    var values = {}
     node.values.forEach(function (value) {
       switch (value.kind) {
         case 'Comment':
-          description.push(value.value.substr(1));
-          break;
+          description.push(value.value.substr(1))
+          break
         case 'EnumValueDefinition':
           values[value.name.value] = {
             description: getDescription(),
             value: implementations[node.name.value] && implementations[node.name.value][value.name.value]
-            // deprecationReason?: string;
-          };
-          break;
+            // deprecationReason?: string
+          }
+          break
         default:
-          throw new Error('Unexpected node type ' + value.kind);
+          throw new Error('Unexpected node type ' + value.kind)
       }
-    });
+    })
     return new EnumType({
       name: node.name.value,
       description: d,
       values: values
-    });
+    })
   }
 
   function getInputObjectTypeDefinition(node) {
@@ -396,7 +397,7 @@ function Generate (document, implementations) {
             type: getInputType(field.type),
             defaultValue: field.defaultValue ? getRawValue(field.defaultValue) : undefined
           }
-          break;
+          break
         default:
           throw new Error('Unexpected node type ' + field.kind)
       }

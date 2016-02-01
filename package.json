@@ -11,17 +11,20 @@
     "type": "git",
     "url": "git://github.com/CatTail/graphql-generator"
   },
-  "dependencies": {
-    "debug": "^2.2.0"
-  },
-  "devDependencies": {
-    "mocha": "^2.3.4"
-  },
   "peerDependencies": {
     "graphql": "^0.4.14"
   },
+  "main": "src/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+      "test": "npm run lint && npm run testonly",
+      "testonly": "NODE_ENV=test mocha src/**/__tests__/**/*.js",
+      "lint": "eslint src",
+      "watch": "npm test; fswatch -o src | xargs -n1 -I{} npm test",
+      "preversion": "npm test"
   },
-  "main": "index.js"
+  "devDependencies": {
+      "chai": "^3.5.0",
+      "eslint": "^1.10.3",
+      "mocha": "^2.4.5"
+  }
 }
