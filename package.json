@@ -1,6 +1,6 @@
 {
   "name": "graphql-generator",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "GraphQL schema generator",
   "keywords": [
     "graphql",
@@ -16,15 +16,15 @@
   },
   "main": "src/index.js",
   "scripts": {
-      "test": "npm run lint && npm run testonly",
-      "testonly": "NODE_ENV=test mocha src/**/__tests__/**/*.js",
-      "lint": "eslint src",
-      "watch": "npm test; fswatch -o src | xargs -n1 -I{} npm test",
-      "preversion": "npm test"
+    "test": "npm run lint && npm run testonly",
+    "testonly": "NODE_ENV=test mocha src/**/__tests__/**/*.js",
+    "lint": "eslint src",
+    "watch": "npm test; fswatch -o src | xargs -n1 -I{} npm test",
+    "preversion": "npm test"
   },
   "devDependencies": {
-      "chai": "^3.5.0",
-      "eslint": "^1.10.3",
-      "mocha": "^2.4.5"
+    "chai": "^3.5.0",
+    "eslint": "^1.10.3",
+    "mocha": "^2.4.5"
   }
 }
