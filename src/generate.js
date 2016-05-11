@@ -52,6 +52,9 @@ function Generate (document, implementations, definition) {
   var unionTypes = definition.unionTypes || {}
   var scalarTypes = definition.scalarTypes || {}
   var enumTypes = definition.enumTypes || {}
+  var lazyDependencies = definition.lazyDependencies || []
+
+  var lazyDependenciesResolved = false
 
   /**
    * Start from the top of the document
@@ -243,11 +246,68 @@ function Generate (document, implementations, definition) {
     return t
   }
 
+  function resolveLazyDependencies() {
+    if (lazyDependenciesResolved) return
+
+    function extend(target) {
+      var i = 1, length = arguments.length, source
+      for ( ; i < length; i++ ) {
+        // Only deal with defined values
+        if ( (source = arguments[i]) != undefined ) {
+          Object.getOwnPropertyNames(source).forEach(function(k){
+            var d = Object.getOwnPropertyDescriptor(source, k) || {value:source[k]}
+            if (d.get) {
+              target.__defineGetter__(k, d.get)
+              if (d.set) target.__defineSetter__(k, d.set)
+            }
+            else if (target !== d.value) {
+              target[k] = d.value
+            }
+          })
+        }
+      }
+      return target
+    }
+
+    var DEFINITION_TYPES = [
+      'objectTypes',
+      'interfaceTypes',
+      'inputTypes',
+      'unionTypes',
+      'scalarTypes',
+      'enumTypes'
+    ]
+
+    var mixed = {}
+
+    lazyDependencies.forEach(function(arg) {
+      var val = arg()
+      DEFINITION_TYPES.forEach(function (typeName) {
+        mixed[typeName] = {}
+        for (var key in val[typeName]) {
+          if (Object.hasOwnProperty.call(val[typeName], key)) {
+            mixed[typeName][key] = val[typeName][key]
+          }
+        }
+      })
+    })
+
+    objectTypes = extend(objectTypes, mixed.objectTypes)
+    interfaceTypes = extend(interfaceTypes, mixed.interfaceTypes)
+    inputTypes = extend(inputTypes, mixed.inputTypes)
+    unionTypes = extend(unionTypes, mixed.unionTypes)
+    scalarTypes = extend(scalarTypes, mixed.scalarTypes)
+    enumTypes = extend(enumTypes, mixed.enumTypes)
+
+    lazyDependenciesResolved = true
+  }
+
   /**
    * Get the field definitions
    */
 
   function getFieldDefinitions(node, isInterface) {
+    resolveLazyDependencies()
     var typeName = node.name.value
     var fields = {}
     node.fields.forEach(function (field) {
@@ -411,3 +471,4 @@ function Generate (document, implementations, definition) {
     })
   }
 }
+

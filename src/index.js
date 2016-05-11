@@ -16,22 +16,30 @@ var DEFINITION_TYPES = [
     'unionTypes',
     'scalarTypes',
     'enumTypes',
+    'lazyDependencies'
 ]
 generator.deps = function () {
     var mixed = {}
     DEFINITION_TYPES.forEach(function (typeName) {
+      if (typeName != 'lazyDependencies')
         mixed[typeName] = {}
+      else
+        mixed[typeName] = []
     })
 
     Array.prototype.forEach.call(arguments, function (arg) {
-        DEFINITION_TYPES.forEach(function (typeName) {
-            for (var key in arg[typeName]) {
-                if (Object.hasOwnProperty.call(arg[typeName], key)) {
-                    mixed[typeName][key] = arg[typeName][key]
-                }
-            }
-        })
+        if (typeof arg === typeof Function) {
+          mixed['lazyDependencies'].push(arg)
+        } else
+          DEFINITION_TYPES.forEach(function (typeName) {
+              for (var key in arg[typeName]) {
+                  if (Object.hasOwnProperty.call(arg[typeName], key)) {
+                      mixed[typeName][key] = arg[typeName][key]
+                  }
+              }
+          })
     })
 
     return mixed
 }
+
